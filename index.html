@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Momentum</title>
+<meta name="description" content="Momentum — a private premium habit tracking app.">
+<meta name="theme-color" content="#0A0A0C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Momentum">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="assets/icons/icon-180.png">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="stylesheet" href="css/app.css">
+<link rel="stylesheet" href="css/glass.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/dashboard.css">
+<link rel="stylesheet" href="css/calendar.css">
+<link rel="stylesheet" href="css/stats.css">
+<link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+
+<div id="pin-gate" class="pin-gate hidden">
+  <div class="pin-card glass-panel">
+    <div class="pin-title">Momentum</div>
+    <div class="pin-sub">Enter your PIN</div>
+    <div class="pin-dots" id="pin-dots">
+      <span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span><span class="pin-dot"></span>
+    </div>
+    <div class="pin-pad" id="pin-pad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button data-k="bio" class="pin-bio">⎔</button><button data-k="0">0</button><button data-k="del">⌫</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div id="page-title" class="page-title">Dashboard</div>
+      <button id="urge-btn" class="urge-btn" aria-label="Emergency Mode">
+        <span class="urge-btn-dot"></span> Urge
+      </button>
+    </div>
+  </header>
+
+  <main id="view-root" class="view-root">
+
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view">
+      <div class="greeting-block">
+        <div class="greeting" id="greeting">Good evening</div>
+        <div class="greeting-date" id="greeting-date">Friday, July 17</div>
+      </div>
+
+      <div class="glass-panel ring-panel">
+        <div class="ring-wrap">
+          <svg id="streak-ring" viewBox="0 0 220 220" class="streak-ring">
+            <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+            <circle id="ring-progress" class="ring-progress" cx="110" cy="110" r="96"></circle>
+          </svg>
+          <div class="ring-center">
+            <div class="ring-number" id="ring-streak">0</div>
+            <div class="ring-label">day streak</div>
+          </div>
+        </div>
+        <div class="ring-stats">
+          <div class="ring-stat">
+            <div class="ring-stat-num" id="stat-longest">0</div>
+            <div class="ring-stat-label">Longest</div>
+          </div>
+          <div class="ring-stat">
+            <div class="ring-stat-num" id="stat-completion">0%</div>
+            <div class="ring-stat-label">Completion</div>
+          </div>
+          <div class="ring-stat">
+            <div class="ring-stat-num" id="stat-challenge">30</div>
+            <div class="ring-stat-label">Challenge</div>
+          </div>
+        </div>
+        <div class="today-actions">
+          <button id="mark-complete-btn" class="pill-btn pill-btn-primary">Mark Today Complete</button>
+          <button id="mark-half-btn" class="pill-btn">Half</button>
+        </div>
+      </div>
+
+      <div class="glass-panel quote-panel">
+        <div class="quote-mark">"</div>
+        <div class="quote-text" id="daily-quote">Discipline is choosing between what you want now and what you want most.</div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="glass-panel dash-mini" id="weather-card">
+          <div class="mini-label">Weather</div>
+          <div class="mini-value">☀️ 72°</div>
+          <div class="mini-sub">Clear skies</div>
+        </div>
+        <div class="glass-panel dash-mini" id="mood-card">
+          <div class="mini-label">Today's Mood</div>
+          <div class="mini-value" id="mood-mini">—</div>
+          <div class="mini-sub">Tap to log</div>
+        </div>
+      </div>
+
+      <div class="glass-panel activity-panel">
+        <div class="panel-header">Recent Activity</div>
+        <div id="activity-list" class="activity-list"></div>
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="view-calendar" class="view hidden">
+      <div class="glass-panel cal-panel">
+        <div class="cal-header">
+          <button id="cal-prev" class="cal-nav">‹</button>
+          <div id="cal-month-label" class="cal-month-label">July 2026</div>
+          <button id="cal-next" class="cal-nav">›</button>
+        </div>
+        <div class="cal-weekdays">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+        </div>
+        <div id="cal-grid" class="cal-grid"></div>
+        <div class="cal-legend">
+          <span class="legend-item"><i class="legend-dot dot-complete"></i>Complete</span>
+          <span class="legend-item"><i class="legend-dot dot-half"></i>Half</span>
+          <span class="legend-item"><i class="legend-dot dot-missed"></i>Missed</span>
+          <span class="legend-item"><i class="legend-dot dot-freeze"></i>Freeze</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- DAY EDITOR MODAL -->
+    <div id="day-modal" class="modal-overlay hidden">
+      <div class="modal-sheet glass-panel">
+        <div class="modal-handle"></div>
+        <div class="modal-title" id="day-modal-date">July 17, 2026</div>
+        <div class="day-status-row">
+          <button class="status-chip" data-status="complete">Complete</button>
+          <button class="status-chip" data-status="half">Half</button>
+          <button class="status-chip" data-status="incomplete">Missed</button>
+          <button class="status-chip" data-status="freeze">Freeze</button>
+        </div>
+        <div class="field-label">Mood</div>
+        <div class="mood-row" id="day-mood-row">
+          <button data-mood="great">😄</button>
+          <button data-mood="good">🙂</button>
+          <button data-mood="okay">😐</button>
+          <button data-mood="low">🙁</button>
+          <button data-mood="rough">😣</button>
+        </div>
+        <div class="field-label">Energy: <span id="day-energy-val">3</span>/5</div>
+        <input type="range" min="1" max="5" value="3" id="day-energy" class="slider">
+        <div class="field-label">Tags</div>
+        <input type="text" id="day-tags" class="text-input" placeholder="workout, social, travel...">
+        <div class="field-label">Notes</div>
+        <textarea id="day-notes" class="text-area" placeholder="What happened today?"></textarea>
+        <div class="modal-actions">
+          <button id="day-delete" class="pill-btn pill-btn-danger">Clear Day</button>
+          <button id="day-save" class="pill-btn pill-btn-primary">Save</button>
+        </div>
+        <button id="day-close" class="modal-close">Close</button>
+      </div>
+    </div>
+
+    <!-- STATISTICS -->
+    <section id="view-stats" class="view hidden">
+      <div class="stats-tabs">
+        <button class="stats-tab active" data-range="week">Week</button>
+        <button class="stats-tab" data-range="month">Month</button>
+        <button class="stats-tab" data-range="year">Year</button>
+        <button class="stats-tab" data-range="all">All</button>
+      </div>
+      <div class="glass-panel stats-summary-grid">
+        <div class="stats-summary-item"><div class="ss-num" id="ss-completion">0%</div><div class="ss-label">Completion</div></div>
+        <div class="stats-summary-item"><div class="ss-num" id="ss-avgstreak">0</div><div class="ss-label">Avg Streak</div></div>
+        <div class="stats-summary-item"><div class="ss-num" id="ss-total">0</div><div class="ss-label">Total Done</div></div>
+        <div class="stats-summary-item"><div class="ss-num" id="ss-missed">0</div><div class="ss-label">Missed</div></div>
+      </div>
+      <div class="glass-panel">
+        <div class="panel-header">Trend</div>
+        <svg id="trend-chart" class="trend-chart" viewBox="0 0 320 140" preserveAspectRatio="none"></svg>
+      </div>
+      <div class="glass-panel">
+        <div class="panel-header">Heatmap</div>
+        <div id="heatmap" class="heatmap"></div>
+      </div>
+      <div class="glass-panel">
+        <div class="panel-header">Best Weekday</div>
+        <div class="bar-chart" id="weekday-chart"></div>
+      </div>
+      <div class="glass-panel">
+        <div class="panel-header">Best Month</div>
+        <div class="bar-chart" id="month-chart"></div>
+      </div>
+    </section>
+
+    <!-- ACHIEVEMENTS -->
+    <section id="view-achievements" class="view hidden">
+      <div id="achv-grid" class="achv-grid"></div>
+    </section>
+
+    <!-- JOURNAL -->
+    <section id="view-journal" class="view hidden">
+      <div class="glass-panel journal-composer">
+        <div class="panel-header">Today's Entry</div>
+        <div class="field-label">Mood</div>
+        <div class="mood-row" id="journal-mood-row">
+          <button data-mood="great">😄</button>
+          <button data-mood="good">🙂</button>
+          <button data-mood="okay">😐</button>
+          <button data-mood="low">🙁</button>
+          <button data-mood="rough">😣</button>
+        </div>
+        <div class="field-grid">
+          <div>
+            <div class="field-label">Energy</div>
+            <input type="range" min="1" max="5" value="3" id="journal-energy" class="slider">
+          </div>
+          <div>
+            <div class="field-label">Sleep (hrs)</div>
+            <input type="number" min="0" max="14" step="0.5" id="journal-sleep" class="text-input">
+          </div>
+        </div>
+        <div class="field-grid">
+          <label class="checkbox-row"><input type="checkbox" id="journal-exercise"> Exercised today</label>
+        </div>
+        <div class="field-label">Triggers</div>
+        <input type="text" id="journal-triggers" class="text-input" placeholder="stress, boredom, loneliness...">
+        <div class="field-label">Wins</div>
+        <input type="text" id="journal-wins" class="text-input" placeholder="What went well?">
+        <div class="field-label">Notes</div>
+        <textarea id="journal-text" class="text-area" placeholder="Write freely..."></textarea>
+        <button id="journal-save" class="pill-btn pill-btn-primary journal-save-btn">Save Entry</button>
+      </div>
+      <div class="glass-panel">
+        <div class="panel-header">Past Entries</div>
+        <div id="journal-list" class="journal-list"></div>
+      </div>
+    </section>
+
+    <!-- EMERGENCY / URGE MODE -->
+    <section id="view-urge" class="view hidden">
+      <div class="urge-screen">
+        <div class="urge-timer-wrap">
+          <svg viewBox="0 0 220 220" class="urge-ring">
+            <circle class="ring-track" cx="110" cy="110" r="96"></circle>
+            <circle id="urge-ring-progress" class="ring-progress urge-progress" cx="110" cy="110" r="96"></circle>
+          </svg>
+          <div class="urge-time" id="urge-time">10:00</div>
+        </div>
+        <div class="breathing-dot" id="breathing-dot"></div>
+        <div class="breathing-label" id="breathing-label">Breathe in</div>
+        <div class="urge-quote" id="urge-quote">This urge is temporary. You are stronger than the moment.</div>
+        <div class="urge-actions">
+          <div class="glass-panel urge-action">💧 Drink a glass of water</div>
+          <div class="glass-panel urge-action">🚶 Take a 5 minute walk</div>
+          <div class="glass-panel urge-action">🚿 Try a cold shower</div>
+          <div class="glass-panel urge-action">🎵 Put on music</div>
+          <div class="glass-panel urge-action" id="urge-exercise">💪 Do 20 pushups</div>
+        </div>
+        <button id="urge-exit" class="pill-btn urge-exit-btn">I'm okay now</button>
+      </div>
+    </section>
+
+    <!-- GOALS -->
+    <section id="view-goals" class="view hidden">
+      <div class="glass-panel">
+        <div class="panel-header">New Goal</div>
+        <input type="text" id="goal-title" class="text-input" placeholder="Goal title">
+        <div class="field-grid">
+          <div>
+            <div class="field-label">Target days</div>
+            <input type="number" id="goal-target" class="text-input" value="30" min="1">
+          </div>
+          <div>
+            <div class="field-label">Category</div>
+            <select id="goal-category" class="text-input">
+              <option>Personal</option>
+              <option>Health</option>
+              <option>Mind</option>
+              <option>Relationships</option>
+            </select>
+          </div>
+        </div>
+        <button id="goal-add" class="pill-btn pill-btn-primary">Add Goal</button>
+      </div>
+      <div id="goal-list" class="goal-list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="view-settings" class="view hidden">
+      <div class="glass-panel settings-group">
+        <div class="settings-title">Appearance</div>
+        <div class="settings-row">
+          <span>Dark Mode</span>
+          <label class="switch"><input type="checkbox" id="setting-dark" checked><span class="switch-track"></span></label>
+        </div>
+        <div class="settings-row">
+          <span>Accent Color</span>
+          <div class="accent-swatches" id="accent-swatches">
+            <button class="swatch" data-accent="#7C6FFF" style="background:#7C6FFF"></button>
+            <button class="swatch" data-accent="#0A84FF" style="background:#0A84FF"></button>
+            <button class="swatch" data-accent="#FF9F0A" style="background:#FF9F0A"></button>
+            <button class="swatch" data-accent="#30D158" style="background:#30D158"></button>
+            <button class="swatch" data-accent="#FF375F" style="background:#FF375F"></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel settings-group">
+        <div class="settings-title">Security</div>
+        <div class="settings-row">
+          <span>PIN Lock</span>
+          <label class="switch"><input type="checkbox" id="setting-pin"><span class="switch-track"></span></label>
+        </div>
+        <div class="settings-row">
+          <span>Biometric Unlock</span>
+          <label class="switch"><input type="checkbox" id="setting-bio"><span class="switch-track"></span></label>
+        </div>
+      </div>
+
+      <div class="glass-panel settings-group">
+        <div class="settings-title">Challenge</div>
+        <div class="settings-row">
+          <span>Challenge Length (days)</span>
+          <input type="number" id="setting-challenge" class="text-input settings-input" value="30">
+        </div>
+        <div class="settings-row">
+          <span>Notifications</span>
+          <label class="switch"><input type="checkbox" id="setting-notify" checked><span class="switch-track"></span></label>
+        </div>
+      </div>
+
+      <div class="glass-panel settings-group">
+        <div class="settings-title">Data</div>
+        <button id="export-btn" class="pill-btn full-width">Export JSON</button>
+        <label class="pill-btn full-width file-label">
+          Import JSON
+          <input type="file" id="import-input" accept="application/json" hidden>
+        </label>
+        <button id="backup-btn" class="pill-btn full-width">Backup Now</button>
+        <button id="reset-btn" class="pill-btn pill-btn-danger full-width">Reset All Data</button>
+      </div>
+
+      <div class="glass-panel settings-group">
+        <div class="settings-title">About</div>
+        <button id="about-btn" class="pill-btn full-width">About Momentum</button>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="view-about" class="view hidden">
+      <div class="glass-panel about-panel">
+        <div class="about-logo">◐</div>
+        <div class="about-name">Momentum</div>
+        <div class="about-version">Version 1.0.0</div>
+        <p class="about-text">Momentum is a private, offline-first habit tracker built to help you build consistency, one day at a time. All of your data stays on this device.</p>
+        <p class="about-text">Built with vanilla HTML, CSS, and JavaScript. No trackers. No accounts. No ads.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav" id="bottom-nav">
+    <button class="nav-item active" data-view="dashboard"><span class="nav-icon">⌂</span><span>Home</span></button>
+    <button class="nav-item" data-view="calendar"><span class="nav-icon">▦</span><span>Calendar</span></button>
+    <button class="nav-item" data-view="stats"><span class="nav-icon">◔</span><span>Stats</span></button>
+    <button class="nav-item" data-view="journal"><span class="nav-icon">✎</span><span>Journal</span></button>
+    <button class="nav-item" data-view="more"><span class="nav-icon">⋯</span><span>More</span></button>
+  </nav>
+
+  <div id="more-sheet" class="modal-overlay hidden">
+    <div class="modal-sheet glass-panel">
+      <div class="modal-handle"></div>
+      <div class="more-grid">
+        <button class="more-item" data-view="achievements"><span class="nav-icon">★</span>Achievements</button>
+        <button class="more-item" data-view="goals"><span class="nav-icon">◎</span>Goals</button>
+        <button class="more-item" data-view="settings"><span class="nav-icon">⚙</span>Settings</button>
+        <button class="more-item" data-view="about"><span class="nav-icon">ⓘ</span>About</button>
+      </div>
+      <button class="modal-close" id="more-close">Close</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <div id="install-banner" class="install-banner hidden">
+    <span>Install Momentum for the full experience</span>
+    <button id="install-btn">Install</button>
+    <button id="install-dismiss">✕</button>
+  </div>
+
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/router.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/calendar.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/achievements.js"></script>
+<script src="js/journal.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/settings.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
